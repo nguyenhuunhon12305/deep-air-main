@@ -9,7 +9,73 @@
     <style>
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
-    body { background: #f1f5f9; color: #334155; min-height: 100vh; }
+    body { background: #eef2f3; color: #334155; min-height: 100vh; position: relative; }
+
+
+
+    .air-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: -1;
+        overflow: hidden;
+        background: #eef2f3;
+    }
+    .heat-wave {
+        position: absolute;
+        width: 70vw;
+        height: 70vw;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(255, 154, 107, 0.38) 0%, rgba(255, 154, 107, 0) 70%);
+        top: -20vw;
+        right: -15vw;
+        filter: blur(60px);
+        animation: pulseHeat 20s infinite alternate ease-in-out;
+        will-change: transform;
+    }
+    .humidity-cloud {
+        position: absolute;
+        width: 80vw;
+        height: 80vw;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(107, 212, 255, 0.38) 0%, rgba(107, 212, 255, 0) 70%);
+        bottom: -30vw;
+        left: -20vw;
+        filter: blur(80px);
+        animation: driftHumidity 25s infinite alternate ease-in-out;
+        will-change: transform;
+    }
+    .dust-particles {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image:
+            radial-gradient(rgba(80, 90, 100, 0.26) 1.5px, transparent 1.5px),
+            radial-gradient(rgba(80, 90, 100, 0.13) 2.5px, transparent 2.5px);
+        background-size: 70px 70px, 120px 120px;
+        background-position: 0 0, 40px 40px;
+        animation: windBlow 60s linear infinite;
+    }
+    @keyframes pulseHeat {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.7; }
+        100% { transform: scale(1.3) translate(-10vw, 10vh); opacity: 1; }
+    }
+    @keyframes driftHumidity {
+        0% { transform: scale(1) translate(0, 0); opacity: 0.8; }
+        100% { transform: scale(1.2) translate(15vw, -10vh); opacity: 1; }
+    }
+    @keyframes windBlow {
+        0% { background-position: 0px 0px, 40px 40px; }
+        100% { background-position: 700px 700px, 1240px 1240px; }
+    }
+    @keyframes fadeSlideUp {
+        from { opacity: 0; transform: translateY(18px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
 
     .site-header {
         position: sticky;
@@ -27,9 +93,9 @@
         max-width: 1080px;
         margin: 0 auto;
         display: grid;
-        grid-template-columns: 82px minmax(0, 1fr) 82px;
+        grid-template-columns: 76px minmax(0, 1fr) 76px;
         align-items: center;
-        gap: 20px;
+        gap: 18px;
     }
     .header-logo {
         display: flex;
@@ -37,14 +103,19 @@
         justify-content: center;
     }
     .header-logo img {
-        max-width: 72px;
-        max-height: 72px;
+        width: 66px;
+        height: 66px;
+        max-width: 66px;
+        max-height: 66px;
         object-fit: contain;
         display: block;
     }
     .header-logo.school img {
+        width: 66px;
+        height: 66px;
         max-width: 66px;
-        max-height: 76px;
+        max-height: 66px;
+        object-fit: contain;
     }
     .header-text {
         text-align: center;
@@ -161,11 +232,85 @@
     .badge.user { background: #ecfdf5; color: #047857; }
     .hidden { display: none !important; }
 
+
+    .container {
+        animation: fadeSlideUp 0.65s ease both;
+    }
+    .hero-section,
+    .card,
+    .account-panel,
+    .table-wrap {
+        background: rgba(255, 255, 255, 0.72);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        border: 1px solid rgba(255, 255, 255, 0.82);
+        box-shadow: 0 10px 40px rgba(31, 38, 135, 0.08);
+        transition: transform 0.32s ease, box-shadow 0.32s ease, background 0.32s ease;
+    }
+    .hero-section:hover,
+    .card:hover,
+    .account-panel:hover {
+        transform: translateY(-6px);
+        background: rgba(255, 255, 255, 0.84);
+        box-shadow: 0 18px 42px rgba(31, 38, 135, 0.13);
+    }
+    .page-nav a,
+    .page-nav button,
+    .btn-primary,
+    .btn-danger {
+        transition: transform 0.25s ease, box-shadow 0.25s ease, background 0.25s ease, color 0.25s ease;
+    }
+    .page-nav a:hover,
+    .page-nav button:hover,
+    .btn-primary:hover,
+    .btn-danger:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 20px rgba(33, 63, 114, 0.18);
+    }
+    .project-img {
+        box-shadow: 0 12px 28px rgba(31, 38, 135, 0.12);
+        transition: transform 0.35s ease, box-shadow 0.35s ease;
+    }
+    .project-img:hover {
+        transform: scale(1.015);
+        box-shadow: 0 18px 38px rgba(31, 38, 135, 0.16);
+    }
+    li i,
+    .card h3 i,
+    .hero-section h1 i,
+    .account-panel h2 i {
+        filter: drop-shadow(0 4px 8px rgba(37, 99, 235, 0.18));
+    }
+    table {
+        background: rgba(255, 255, 255, 0.72);
+    }
+    tbody tr {
+        transition: background 0.2s ease, transform 0.2s ease;
+    }
+    tbody tr:hover {
+        background: rgba(255, 255, 255, 0.92);
+        transform: scale(1.003);
+    }
+
+
     @media (max-width: 900px) {
         .site-header { padding: 12px 16px 14px; }
-        .header-brand { grid-template-columns: 66px minmax(0, 1fr) 66px; gap: 12px; }
-        .header-logo img { max-width: 58px; max-height: 58px; }
-        .header-logo.school img { max-width: 54px; max-height: 62px; }
+        .header-brand { grid-template-columns: 76px minmax(0, 1fr) 76px; gap: 18px; }
+        .header-logo img {
+        width: 66px;
+        height: 66px;
+        max-width: 66px;
+        max-height: 66px;
+        object-fit: contain;
+        display: block;
+    }
+        .header-logo.school img {
+        width: 62px;
+        height: 72px;
+        max-width: 62px;
+        max-height: 72px;
+        object-fit: contain;
+    }
         .header-text .school-name { font-size: 12px; white-space: normal; }
         .header-text .faculty-name,
         .header-text .department-name { font-size: 12px; white-space: normal; }
@@ -175,9 +320,22 @@
         .hero-section h1 { font-size: 25px; }
     }
     @media (max-width: 560px) {
-        .header-brand { grid-template-columns: 50px minmax(0, 1fr) 50px; gap: 8px; }
-        .header-logo img { max-width: 46px; max-height: 46px; }
-        .header-logo.school img { max-width: 44px; max-height: 50px; }
+        .header-brand { grid-template-columns: 58px minmax(0, 1fr) 58px; gap: 18px; }
+        .header-logo img {
+        width: 66px;
+        height: 66px;
+        max-width: 66px;
+        max-height: 66px;
+        object-fit: contain;
+        display: block;
+    }
+        .header-logo.school img {
+        width: 62px;
+        height: 72px;
+        max-width: 62px;
+        max-height: 72px;
+        object-fit: contain;
+    }
         .nav-links a, .nav-links button, .page-nav a, .page-nav button, .status-pill { font-size: 12px; padding: 8px 10px; }
         .form-grid { grid-template-columns: 1fr; }
         .project-img { width: 100%; max-height: 320px; }
@@ -186,10 +344,16 @@
 </style>
 </head>
 <body>
+<div class="air-background">
+    <div class="heat-wave"></div>
+    <div class="humidity-cloud"></div>
+    <div class="dust-particles"></div>
+</div>
+
 <header class="site-header">
     <div class="header-brand">
-        <div class="header-logo faculty">
-            <img src="logo_khoa.jpg" alt="Logo Khoa Điện - Điện tử">
+        <div class="header-logo school">
+            <img src="logo_truong.png" alt="Logo Trường HCMUTE">
         </div>
         <div class="header-text">
             <div class="school-name">TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP.HCM</div>
@@ -197,8 +361,8 @@
             <div class="department-name">BỘ MÔN ĐIỆN TỬ - THÔNG TIN</div>
             <div class="system-name">HỆ THỐNG GIÁM SÁT CHẤT LƯỢNG KHÔNG KHÍ</div>
         </div>
-        <div class="header-logo school">
-            <img src="logo_truong.png" alt="Logo Trường HCMUTE">
+        <div class="header-logo faculty">
+            <img src="logo_khoa.jpg" alt="Logo Khoa Điện - Điện tử">
         </div>
     </div>
     <nav class="nav-links">
