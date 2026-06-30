@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <title>Lý thuyết - Deep Air Monitoring</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<style>
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+    body { background: #f1f5f9; color: #334155; min-height: 100vh; }
+
+    .site-header {
+        position: sticky;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: rgba(255, 255, 255, 0.97);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        box-shadow: 0 4px 18px rgba(160, 175, 192, 0.18);
+        z-index: 1000;
+        padding: 12px 28px 14px;
+    }
+    .header-brand {
+        max-width: 1080px;
+        margin: 0 auto;
+        display: grid;
+        grid-template-columns: 82px minmax(0, 1fr) 82px;
+        align-items: center;
+        gap: 20px;
+    }
+    .header-logo {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .header-logo img {
+        max-width: 72px;
+        max-height: 72px;
+        object-fit: contain;
+        display: block;
+    }
+    .header-logo.school img {
+        max-width: 66px;
+        max-height: 76px;
+    }
+    .header-text {
+        text-align: center;
+        color: #213f72;
+        line-height: 1.25;
+        min-width: 0;
+    }
+    .header-text .school-name {
+        font-size: 15px;
+        font-weight: 800;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .header-text .faculty-name,
+    .header-text .department-name {
+        font-size: 14px;
+        font-weight: 700;
+        text-transform: uppercase;
+        margin-top: 3px;
+        white-space: nowrap;
+    }
+    .header-text .system-name {
+        font-size: 18px;
+        font-weight: 900;
+        text-transform: uppercase;
+        margin-top: 8px;
+        letter-spacing: 0.2px;
+        white-space: nowrap;
+    }
+    .nav-links,
+    .page-nav {
+        max-width: 1080px;
+        margin: 12px auto 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    .nav-links a, .nav-links button,
+    .page-nav a, .page-nav button {
+        text-decoration: none;
+        color: #213f72;
+        background: #eef5ff;
+        border: 1px solid #d8e6fb;
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-weight: 700;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+    .nav-links a:hover, .nav-links button:hover, .nav-links .active,
+    .page-nav a:hover, .page-nav button:hover, .page-nav .active-page {
+        color: #fff;
+        background: #213f72;
+    }
+    .status-pill {
+        color: #047857;
+        background: #ecfdf5;
+        border: 1px solid #a7f3d0;
+        padding: 9px 14px;
+        border-radius: 999px;
+        font-weight: 800;
+        font-size: 14px;
+        line-height: 1.2;
+    }
+
+    .container { max-width: 1120px; margin: 30px auto 0; padding: 0 22px; }
+    .hero-section { background: #fff; padding: 34px 38px; border-radius: 18px; box-shadow: 0 4px 20px rgba(160, 175, 192, 0.13); margin-bottom: 24px; }
+    .hero-section h1 { color: #213f72; font-size: 30px; line-height: 1.25; margin-bottom: 12px; }
+    .hero-section p { color: #64748b; font-size: 16px; line-height: 1.65; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 22px; align-items: stretch; }
+    .card { background: #fff; border-radius: 18px; padding: 26px; box-shadow: 0 4px 20px rgba(160, 175, 192, 0.12); border: 1px solid rgba(226, 232, 240, 0.7); }
+    .card h3 { color: #213f72; margin-bottom: 14px; display: flex; align-items: center; gap: 10px; font-size: 20px; line-height: 1.3; }
+    .card p, .card li { color: #475569; line-height: 1.6; margin-bottom: 10px; font-size: 15px; }
+    ul { list-style: none; }
+    li i { color: #2563eb; margin-right: 8px; }
+    .wide { grid-column: 1 / -1; }
+    .project-img {
+        width: min(100%, 640px);
+        max-height: 420px;
+        object-fit: contain;
+        display: block;
+        margin: 18px auto 0;
+        border-radius: 14px;
+        border: 1px solid #e2e8f0;
+        background: #fff;
+    }
+    .footer { text-align: center; padding: 24px; color: #64748b; }
+
+    .account-panel { background: #fff; border-radius: 18px; padding: 28px; box-shadow: 0 4px 20px rgba(160, 175, 192, 0.13); margin-bottom: 26px; border: 1px solid rgba(226, 232, 240, 0.7); }
+    .account-panel h2 { color: #213f72; font-size: 24px; margin-bottom: 10px; display: flex; align-items: center; gap: 10px; }
+    .account-panel .sub { color: #64748b; line-height: 1.6; margin-bottom: 22px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; }
+    .form-group { display: flex; flex-direction: column; gap: 8px; }
+    .form-group label { color: #334155; font-size: 14px; font-weight: 600; }
+    .form-group input, .form-group select { border: 1px solid #cbd5e1; border-radius: 10px; padding: 12px 14px; outline: none; background: #f8fafc; color: #334155; font-size: 14px; }
+    .form-group input:focus, .form-group select:focus { border-color: #2563eb; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.12); background: #fff; }
+    .rule-box { margin: 18px 0; background: #eff6ff; border: 1px solid #bfdbfe; color: #1e3a8a; padding: 14px 16px; border-radius: 12px; line-height: 1.55; font-size: 14px; }
+    .btn-primary { background: #213f72; color: #fff; border: none; border-radius: 10px; padding: 12px 18px; cursor: pointer; font-weight: 600; }
+    .btn-primary:hover { background: #1e40af; }
+    .btn-danger { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; border-radius: 10px; padding: 8px 10px; cursor: pointer; font-weight: 600; }
+    .message-box { display: none; margin: 16px 0; padding: 12px 14px; border-radius: 10px; font-size: 14px; line-height: 1.45; }
+    .message-box.error { display: block; background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+    .message-box.success { display: block; background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+    .table-wrap { overflow-x: auto; margin-top: 22px; border-radius: 14px; border: 1px solid #e2e8f0; }
+    table { width: 100%; border-collapse: collapse; min-width: 760px; background: #fff; }
+    th, td { text-align: left; padding: 13px 14px; border-bottom: 1px solid #e2e8f0; font-size: 14px; }
+    th { background: #f8fafc; color: #213f72; font-weight: 700; }
+    tr:last-child td { border-bottom: none; }
+    .badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
+    .badge.admin { background: #eef2ff; color: #3730a3; }
+    .badge.user { background: #ecfdf5; color: #047857; }
+    .hidden { display: none !important; }
+
+    @media (max-width: 900px) {
+        .site-header { padding: 12px 16px 14px; }
+        .header-brand { grid-template-columns: 66px minmax(0, 1fr) 66px; gap: 12px; }
+        .header-logo img { max-width: 58px; max-height: 58px; }
+        .header-logo.school img { max-width: 54px; max-height: 62px; }
+        .header-text .school-name { font-size: 12px; white-space: normal; }
+        .header-text .faculty-name,
+        .header-text .department-name { font-size: 12px; white-space: normal; }
+        .header-text .system-name { font-size: 14px; white-space: normal; }
+        .container { margin-top: 24px; padding: 0 16px; }
+        .hero-section { padding: 28px 22px; }
+        .hero-section h1 { font-size: 25px; }
+    }
+    @media (max-width: 560px) {
+        .header-brand { grid-template-columns: 50px minmax(0, 1fr) 50px; gap: 8px; }
+        .header-logo img { max-width: 46px; max-height: 46px; }
+        .header-logo.school img { max-width: 44px; max-height: 50px; }
+        .nav-links a, .nav-links button, .page-nav a, .page-nav button, .status-pill { font-size: 12px; padding: 8px 10px; }
+        .form-grid { grid-template-columns: 1fr; }
+        .project-img { width: 100%; max-height: 320px; }
+    }
+
+</style>
+
+</head>
+<body>
+
+<header class="site-header">
+    <div class="header-brand">
+        <div class="header-logo faculty">
+            <img src="logo_khoa.jpg" alt="Logo Khoa Điện - Điện tử">
+        </div>
+        <div class="header-text">
+            <div class="school-name">TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP.HCM</div>
+            <div class="faculty-name">KHOA ĐIỆN - ĐIỆN TỬ</div>
+            <div class="department-name">BỘ MÔN ĐIỆN TỬ - THÔNG TIN</div>
+            <div class="system-name">HỆ THỐNG GIÁM SÁT CHẤT LƯỢNG KHÔNG KHÍ</div>
+        </div>
+        <div class="header-logo school">
+            <img src="logo_truong.png" alt="Logo Trường HCMUTE">
+        </div>
+    </div>
+    <nav class="nav-links">
+        <a href="overview.html"><i class="fa-solid fa-house"></i> Tổng quan</a>
+        <a href="theory.html" class="active"><i class="fa-solid fa-book-open"></i> Lý thuyết</a>
+        <a href="dashboard.html"><i class="fa-solid fa-gauge-high"></i> Dashboard</a>
+        <a href="option.html"><i class="fa-solid fa-sliders"></i> Tùy chọn</a>
+        <button type="button" onclick="deepAirLogout()"><i class="fa-solid fa-right-from-bracket"></i> Đăng xuất</button>
+    </nav>
+</header>
+
+<main class="container">
+    <section class="hero-section">
+        <h1>Cơ sở lý thuyết của hệ thống</h1>
+        <p>Trang này trình bày phần kiến thức nền cho đồ án, giúp người xem hiểu nguyên lý thu thập dữ liệu, truyền dữ liệu, xử lý chỉ số bụi PM2.5 và hiển thị kết quả trên website.</p>
+    </section>
+
+    <section class="grid">
+        <div class="card">
+            <h3><i class="fa-solid fa-wifi"></i> Internet of Things</h3>
+            <p>IoT là mô hình kết nối các thiết bị vật lý với Internet để thu thập, truyền và xử lý dữ liệu. Trong hệ thống này, thiết bị cảm biến đóng vai trò đầu vào, Firebase đóng vai trò lưu trữ, còn website là lớp hiển thị dữ liệu.</p>
+        </div>
+        <div class="card">
+            <h3><i class="fa-solid fa-cloud"></i> Firebase Realtime Database</h3>
+            <p>Firebase Realtime Database giúp lưu dữ liệu dạng JSON và cho phép website truy cập dữ liệu gần thời gian thực. Website sử dụng API để lấy các bản ghi trong node AirQuality và cập nhật biểu đồ.</p>
+        </div>
+        <div class="card">
+            <h3><i class="fa-solid fa-smog"></i> Bụi PM2.5 và AQI</h3>
+            <p>PM2.5 là bụi mịn có đường kính nhỏ hơn hoặc bằng 2,5 µm. Website quy đổi dữ liệu bụi sang đơn vị µg/m³ và tính chỉ số AQI để đánh giá mức độ chất lượng không khí.</p>
+        </div>
+        <div class="card">
+            <h3><i class="fa-solid fa-temperature-half"></i> Nhiệt độ và độ ẩm</h3>
+            <p>Nhiệt độ và độ ẩm là hai thông số môi trường quan trọng, thường được dùng để đánh giá điều kiện không khí trong khu vực giám sát. Hai giá trị này được biểu diễn bằng thẻ dữ liệu và biểu đồ đường.</p>
+        </div>
+        <div class="card">
+            <h3><i class="fa-solid fa-filter"></i> Lọc nhiễu dữ liệu</h3>
+            <p>Dữ liệu cảm biến có thể dao động hoặc xuất hiện giá trị bất thường. Dashboard có chức năng phát hiện outlier, lọc nhiễu và làm mịn dữ liệu bằng trung bình trượt để biểu đồ ổn định hơn.</p>
+        </div>
+        <div class="card">
+            <h3><i class="fa-solid fa-chart-simple"></i> Biểu đồ và dự đoán</h3>
+            <p>Chart.js được sử dụng để vẽ biểu đồ nhiệt độ, độ ẩm và PM2.5. Phần dự đoán dùng hồi quy tuyến tính đơn giản để ước lượng xu hướng chất lượng không khí trong khoảng thời gian tiếp theo.</p>
+        </div>
+    </section>
+</main>
+<footer class="footer">Trang lý thuyết - Deep Air Monitoring</footer>
+<script src="js/auth.js"></script>
+</body>
+</html>

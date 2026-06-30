@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đăng Nhập - Hệ Thống Giám Sát Chất Lượng Không Khí</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Roboto', sans-serif; }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #eef2f7 0%, #dfe6ed 100%);
+            padding: 20px;
+        }
+        .login-container {
+            position: relative;
+            width: min(960px, 100%);
+            background: #ffffff;
+            padding: 28px clamp(24px, 4vw, 42px) 36px;
+            border-radius: 18px;
+            box-shadow: 0 10px 30px rgba(160, 175, 192, 0.25);
+        }
+        .brand-header { text-align: center; margin-bottom: 24px; }
+        .org-header {
+            --logo-size: 135px;
+            display: grid;
+            grid-template-columns: var(--logo-size) minmax(0, 1fr) var(--logo-size);
+            align-items: center;
+            gap: 24px;
+            margin-bottom: 20px;
+        }
+        .logo-box {
+            width: var(--logo-size);
+            height: var(--logo-size);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .logo-box img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+        .org-logo-right img {
+            transform: scale(1.05);
+        }
+        .org-text {
+            min-width: 0;
+            text-align: center;
+            color: #163b72;
+            line-height: 1.35;
+        }
+        .org-text .line-1,
+        .org-text .line-2,
+        .org-text .line-3 {
+            font-weight: 700;
+            text-transform: uppercase;
+            white-space: nowrap;
+        }
+        .org-text .line-1 { font-size: clamp(21px, 2.15vw, 26px); letter-spacing: -0.3px; }
+        .org-text .line-2 { font-size: clamp(18px, 1.8vw, 22px); margin-top: 7px; }
+        .org-text .line-3 { font-size: clamp(16px, 1.55vw, 19px); margin-top: 7px; }
+        .system-icon { font-size: 32px; color: #213f72; margin: 2px 0 8px; }
+        .system-title {
+            color: #213f72;
+            font-weight: 700;
+            font-size: clamp(23px, 2.5vw, 30px);
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+        .system-note { font-size: 12px; color: #94a3b8; margin-top: 8px; }
+        .form-wrap { width: min(440px, 100%); margin: 0 auto; }
+        .input-group { position: relative; margin-bottom: 18px; }
+        .input-group input {
+            width: 100%; padding: 14px 42px 14px 16px; border: 1px solid #cbd5e1; border-radius: 10px;
+            outline: none; font-size: 15px; background-color: #f8fafc; color: #334155; transition: all 0.3s ease;
+        }
+        .input-group input:focus { border-color: #3b82f6; background-color: #fff; box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15); }
+        .input-group i { position: absolute; right: 16px; top: 50%; transform: translateY(-50%); color: #94a3b8; cursor: pointer; }
+        .utilities { display: flex; justify-content: space-between; align-items: center; margin-bottom: 26px; font-size: 14px; gap: 12px; }
+        .utilities label { color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 6px; }
+        .utilities input[type="checkbox"] { accent-color: #3b82f6; }
+        .link-button { color: #3b82f6; border: none; background: transparent; text-decoration: none; font-weight: 500; cursor: pointer; font-size: 14px; }
+        .link-button:hover { color: #1d4ed8; text-decoration: underline; }
+        .btn-login, .btn-primary {
+            width: 100%; padding: 14px; background: linear-gradient(135deg, #213f72 0%, #1e40af 100%);
+            border: none; border-radius: 10px; color: white; font-size: 16px; font-weight: 500; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 4px 12px rgba(33, 63, 114, 0.2);
+        }
+        .btn-login:hover, .btn-primary:hover { opacity: 0.95; transform: translateY(-1px); box-shadow: 0 6px 20px rgba(33, 63, 114, 0.3); }
+        .register-link { text-align: center; margin-top: 24px; font-size: 14px; color: #64748b; line-height: 1.5; }
+        .error-message { color: #ef4444; font-size: 13px; margin-top: 6px; padding-left: 4px; display: none; }
+        .message-box { display: none; margin-bottom: 18px; padding: 12px 14px; border-radius: 10px; font-size: 14px; line-height: 1.45; }
+        .message-box.error { background: #fef2f2; color: #dc2626; border: 1px solid #fecaca; }
+        .message-box.success { background: #ecfdf5; color: #047857; border: 1px solid #a7f3d0; }
+        .password-rule { margin: -6px 0 18px; color: #64748b; font-size: 12px; line-height: 1.45; }
+        .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(15, 23, 42, 0.48); z-index: 1000; align-items: center; justify-content: center; padding: 18px; }
+        .modal-backdrop.show { display: flex; }
+        .modal-card { width: min(520px, 100%); max-height: 90vh; overflow-y: auto; background: #fff; border-radius: 16px; padding: 26px; box-shadow: 0 20px 50px rgba(15, 23, 42, 0.2); }
+        .modal-header { display: flex; justify-content: space-between; align-items: center; gap: 14px; margin-bottom: 16px; }
+        .modal-header h3 { color: #213f72; font-size: 20px; }
+        .close-btn { border: none; background: #eef2f7; color: #334155; width: 34px; height: 34px; border-radius: 50%; cursor: pointer; }
+        .modal-card p { color: #64748b; font-size: 14px; line-height: 1.55; margin-bottom: 16px; }
+        .modal-card .input-group { margin-bottom: 14px; }
+        @media (max-width: 900px) {
+            .login-container { width: min(840px, 100%); padding: 28px 26px 36px; }
+            .org-header { --logo-size: 118px; gap: 18px; }
+            .org-text .line-1 { font-size: clamp(18px, 2.25vw, 21px); letter-spacing: -0.45px; }
+            .org-text .line-2 { font-size: clamp(16px, 2vw, 19px); }
+            .org-text .line-3 { font-size: clamp(14px, 1.8vw, 17px); }
+        }
+        @media (max-width: 720px) {
+            .org-header {
+                grid-template-columns: 1fr 1fr;
+                grid-template-areas:
+                    "left right"
+                    "text text";
+                justify-items: center;
+                row-gap: 12px;
+                --logo-size: 92px;
+            }
+            .org-logo-left { grid-area: left; }
+            .org-logo-right { grid-area: right; }
+            .org-text { grid-area: text; }
+            .org-text .line-1,
+            .org-text .line-2,
+            .org-text .line-3 { white-space: normal; }
+            .org-text .line-1 { font-size: 17px; }
+            .org-text .line-2 { font-size: 15px; }
+            .org-text .line-3 { font-size: 14px; }
+            .system-title { font-size: 21px; }
+        }
+        @media (max-width: 520px) {
+            .login-container { width: 100%; padding: 24px 18px 32px; }
+            .utilities { flex-direction: column; align-items: flex-start; }
+            .org-header { --logo-size: 82px; gap: 10px; }
+            .org-text .line-1 { font-size: 15px; }
+            .org-text .line-2 { font-size: 14px; }
+            .org-text .line-3 { font-size: 13px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="brand-header">
+            <div class="org-header">
+                <div class="logo-box org-logo-left">
+                    <img src="logo_khoa.jpg" alt="Logo Khoa Điện - Điện tử">
+                </div>
+                <div class="org-text">
+                    <div class="line-1">TRƯỜNG ĐẠI HỌC CÔNG NGHỆ KỸ THUẬT TP.HCM</div>
+                    <div class="line-2">KHOA ĐIỆN - ĐIỆN TỬ</div>
+                    <div class="line-3">BỘ MÔN ĐIỆN TỬ - THÔNG TIN</div>
+                </div>
+                <div class="logo-box org-logo-right">
+                    <img src="logo_truong.png" alt="Logo Trường HCMUTE">
+                </div>
+            </div>
+            <div class="system-icon"><i class="fa-solid fa-wind"></i></div>
+            <div class="system-title">HỆ THỐNG GIÁM SÁT CHẤT LƯỢNG KHÔNG KHÍ</div>
+            <div class="system-note">Chỉ tài khoản hợp lệ mới có thể vào hệ thống</div>
+        </div>
+
+        <div class="form-wrap">
+            <div class="message-box error" id="loginErrorBox">Sai tài khoản hoặc mật khẩu. Vui lòng kiểm tra lại.</div>
+
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="input-group">
+                    <input type="text" id="username" placeholder="Tên đăng nhập hoặc Email" autocomplete="username" required>
+                    <div class="error-message" id="usernameError">Vui lòng nhập tài khoản.</div>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" placeholder="Mật khẩu" autocomplete="current-password" required>
+                    <i class="fa-solid fa-eye" id="togglePassword"></i>
+                    <div class="error-message" id="passwordError">Vui lòng nhập mật khẩu.</div>
+                </div>
+                <div class="utilities">
+                    <label><input type="checkbox" id="rememberMe"> Ghi nhớ đăng nhập</label>
+                    <button type="button" class="link-button" onclick="openForgotModal()">Quên mật khẩu?</button>
+                </div>
+                <button type="submit" class="btn-login">Đăng Nhập</button>
+            </form>
+
+            <div class="register-link">
+                <button type="button" class="link-button" onclick="openRegisterModal()">Tạo tài khoản mới</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="registerModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-user-plus"></i> Tạo tài khoản</h3>
+                <button type="button" class="close-btn" onclick="closeRegisterModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p>Nhập thông tin để tạo tài khoản người dùng mới. Sau khi tạo thành công, dùng tài khoản này để đăng nhập vào hệ thống.</p>
+            <div class="message-box" id="registerMessage"></div>
+            <form id="registerForm" onsubmit="handleRegisterAccount(event)">
+                <div class="input-group"><input type="text" id="registerUsername" placeholder="Tên đăng nhập" autocomplete="username" required></div>
+                <div class="input-group"><input type="text" id="registerDisplayName" placeholder="Tên hiển thị" required></div>
+                <div class="input-group"><input type="email" id="registerEmail" placeholder="Email khôi phục"></div>
+                <div class="input-group"><input type="password" id="registerPassword" placeholder="Mật khẩu" autocomplete="new-password" required></div>
+                <div class="input-group"><input type="text" id="registerRecoveryCode" placeholder="Mã khôi phục khi quên mật khẩu" required></div>
+                <div class="password-rule"><i class="fa-solid fa-shield-halved"></i> Quy định: mật khẩu phải hơn 6 ký tự và có ký tự đặc biệt, ví dụ <b>DeepAir@123</b>. Mã khôi phục cần được ghi nhớ để đặt lại mật khẩu.</div>
+                <button type="submit" class="btn-primary">Tạo tài khoản</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="modal-backdrop" id="forgotModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-key"></i> Quên mật khẩu</h3>
+                <button type="button" class="close-btn" onclick="closeForgotModal()"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <p>Nhập tên tài khoản/email, mã khôi phục đã tạo và mật khẩu mới. Mật khẩu mới phải dài hơn 6 ký tự và có ít nhất 1 ký tự đặc biệt.</p>
+            <div class="message-box" id="forgotMessage"></div>
+            <form onsubmit="handleForgotPassword(event)">
+                <div class="input-group"><input type="text" id="forgotUsername" placeholder="Tên đăng nhập hoặc Email" required></div>
+                <div class="input-group"><input type="text" id="forgotCode" placeholder="Mã khôi phục" required></div>
+                <div class="input-group"><input type="password" id="forgotNewPassword" placeholder="Mật khẩu mới" required></div>
+                <div class="password-rule"><i class="fa-solid fa-shield-halved"></i> Quy định: mật khẩu phải hơn 6 ký tự và có ký tự đặc biệt, ví dụ <b>DeepAir@123</b>.</div>
+                <button type="submit" class="btn-primary">Đặt lại mật khẩu</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="js/auth.js"></script>
+    <script>
+        const togglePassword = document.querySelector('#togglePassword');
+        const passwordInput = document.querySelector('#password');
+
+        togglePassword.addEventListener('click', function () {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye-slash');
+        });
+
+        function showMessage(element, type, message) {
+            element.className = `message-box ${type}`;
+            element.textContent = message;
+            element.style.display = 'block';
+        }
+
+        function hideMessage(element) {
+            element.style.display = 'none';
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const rememberMe = document.getElementById('rememberMe').checked;
+            const usernameError = document.getElementById('usernameError');
+            const passwordError = document.getElementById('passwordError');
+            const loginErrorBox = document.getElementById('loginErrorBox');
+            let isValid = true;
+
+            usernameError.style.display = username ? 'none' : 'block';
+            passwordError.style.display = password ? 'none' : 'block';
+            if (!username || !password) isValid = false;
+
+            if (!isValid) {
+                hideMessage(loginErrorBox);
+                return;
+            }
+
+            const result = deepAirLogin(username, password, rememberMe);
+            if (!result.success) {
+                showMessage(loginErrorBox, 'error', result.message);
+                passwordInput.value = '';
+                passwordInput.focus();
+                return;
+            }
+
+            hideMessage(loginErrorBox);
+            window.location.href = 'overview.html';
+        }
+
+        function openRegisterModal() {
+            document.getElementById('registerModal').classList.add('show');
+            hideMessage(document.getElementById('registerMessage'));
+        }
+
+        function closeRegisterModal() {
+            document.getElementById('registerModal').classList.remove('show');
+        }
+
+        function handleRegisterAccount(event) {
+            event.preventDefault();
+            const messageBox = document.getElementById('registerMessage');
+            const result = deepAirRegisterAccount({
+                username: document.getElementById('registerUsername').value.trim(),
+                displayName: document.getElementById('registerDisplayName').value.trim(),
+                email: document.getElementById('registerEmail').value.trim(),
+                password: document.getElementById('registerPassword').value,
+                recoveryCode: document.getElementById('registerRecoveryCode').value.trim()
+            });
+
+            if (!result.success) {
+                showMessage(messageBox, 'error', result.message);
+                return;
+            }
+
+            showMessage(messageBox, 'success', result.message);
+            document.getElementById('registerForm').reset();
+        }
+
+        function openForgotModal() {
+            document.getElementById('forgotModal').classList.add('show');
+            hideMessage(document.getElementById('forgotMessage'));
+        }
+
+        function closeForgotModal() {
+            document.getElementById('forgotModal').classList.remove('show');
+        }
+
+        function handleForgotPassword(event) {
+            event.preventDefault();
+            const username = document.getElementById('forgotUsername').value.trim();
+            const code = document.getElementById('forgotCode').value.trim();
+            const newPassword = document.getElementById('forgotNewPassword').value;
+            const messageBox = document.getElementById('forgotMessage');
+            const result = deepAirResetPassword(username, code, newPassword);
+
+            if (!result.success) {
+                showMessage(messageBox, 'error', result.message);
+                return;
+            }
+
+            showMessage(messageBox, 'success', result.message);
+            document.getElementById('forgotNewPassword').value = '';
+        }
+    </script>
+</body>
+</html>
